@@ -14,12 +14,12 @@
         <div class="blogListing border rounded p-4 mb-3 w-75 d-inline-flex-column">
           <h4 class="blogHeading">
             <%= blog.blogTitle %>
-            <span class="text-muted font-italic font-weight-light"> - <%= blog.createdOn %></span>
+            <span class="text-muted font-italic font-weight-light"> - <%= blog.createdOn.substring(0,10) %></span>
           </h4>
-          <p class="blogText m-3"><%= blog.blogText %></p>
+          <pre class="blogText m-3"><%= blog.blogText %></pre>
           <div class="options d-inline-flex">
-            <a class="nav-link px-8" href="/blog/edit"> <i class="fa fa-edit fa-lg"></i></a>
-            <a class="nav-link px-8" href="/blog/delete"> <i class="fa fa-trash fa-lg"></i></a>
+            <a class="nav-link px-8" href=<%= "/blog/edit/" + blog.id %>> <i class="fa fa-edit fa-lg"></i></a>
+            <a class="nav-link px-8" href=<%= "/blog/delete/" + blog.id %>> <i class="fa fa-trash fa-lg"></i></a>
           </div>
         </div>
       <% }); %>

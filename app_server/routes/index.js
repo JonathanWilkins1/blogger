@@ -3,15 +3,13 @@ var router = express.Router();
 var homeCtrl = require('../controllers/homeCtrl');
 var blogCtrl = require('../controllers/blogCtrl');
 
-/* GET home page. */
 router.get('/', homeCtrl.home);
-/* GET blog list page. */
 router.get('/blog', blogCtrl.list);
-/* GET blog add page. */
-router.get('/blog/add', blogCtrl.add);
-/* GET blog edit page. */
-router.get('/blog/edit', blogCtrl.edit);
-/* GET blog delete page. */
-router.get('/blog/delete', blogCtrl.delete);
+router.get('/blog/add/', blogCtrl.addPage);
+router.post('/blog/add/', blogCtrl.add)
+router.get('/blog/edit/:id', blogCtrl.editPage);
+router.post('/blog/edit/:id', blogCtrl.edit);
+router.get('/blog/delete/:id', blogCtrl.deletePage);
+router.post('/blog/delete/:id', blogCtrl.delete);
 
 module.exports = router;

@@ -6,8 +6,23 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
   </head>
   <body>
-  <%- include('navbar'); %>
+    <%- include('navbar'); %>
     <h1 class="mt-5"><%= title %></h1>
-    <p>This page is currently under construction :( Please check back soon!</p>
+    <div class="container">
+      <div class="list ml-5 d-flex flex-column h-100 align-items-center">
+        <div class="blogListing border rounded p-4 mb-3 w-75 d-inline-flex-column">
+          <form method="POST" class="d-flex flex-column align-items-center">
+            <input class="w-75 mb-4" type="text" name="blogTitle" value='<%= blog.blogTitle %>'>
+            <textarea class="w-75 mb-4" type="text" name="blogText"><%= blog.blogText %></textarea>
+            <input class="w-25 border border-dark rounded bg-primary text-white" type="submit" value="Edit">
+          </form>
+          <div class="mt-2 d-flex flex-column align-items-center">
+            <button class="w-25 border border-dark rounded">
+              <a href="/blog" class="text-decoration-none text-dark d-block">Cancel</a>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
