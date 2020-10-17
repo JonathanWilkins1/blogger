@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html ng-app="bloggerApp">
+  <head>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="/angular/angular.min.js"></script>
+    <script src="/angular/angular-route.min.js"></script>
+    <script src="/angular/angular-ui-router.min.js"></script>
+    <!-- <title>{{ vm.title }}</title> -->
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div ng-include="'/pages/navbar.html'"></div>
+    <!-- Angular Templates -->
+    <!-- Blog Homepage -->
+    <script type="text/ng-template" id="pages/home.html"></script>
+    <!--<script type="text/ng-template" id="blogList.html" href="pages/blogList.html"></script>-->
+    <!--<script type="text/ng-template" id="blogAdd.html" href="pages/blogAdd.html"></script>-->
+    <!--<script type="text/ng-template" id="blogEdit.html" href="pages/blogEdit.html"></script>-->
+    <!--<script type="text/ng-template" id="blogDelete.html" href="pages/blogDelete.html"></script>-->
+    
+    <script src="/angular/bloggerApp.js"></script>
+  </body>
+</html>
