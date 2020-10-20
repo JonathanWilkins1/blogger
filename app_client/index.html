@@ -7,18 +7,109 @@
     <script src="/angular/angular.min.js"></script>
     <script src="/angular/angular-route.min.js"></script>
     <script src="/angular/angular-ui-router.min.js"></script>
-    <!-- <title>{{ vm.title }}</title> -->
+    <title>Jonathan Wilkins' Blog</title>
   </head>
   <body>
     <!-- Navbar -->
-    <div ng-include="'/pages/navbar.html'"></div>
+    <nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-primary">
+      <a class="navbar-brand" href="#/">My Blog</a>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link active" href="#/blog">List Blogs</a>
+          <a class="nav-item nav-link active" href="#/blog/add">Add Blog</a>
+        </div>
+      </div>
+    </nav>
+
     <!-- Angular Templates -->
-    <!-- Blog Homepage -->
-    <script type="text/ng-template" id="pages/home.html"></script>
-    <!--<script type="text/ng-template" id="blogList.html" href="pages/blogList.html"></script>-->
-    <!--<script type="text/ng-template" id="blogAdd.html" href="pages/blogAdd.html"></script>-->
-    <!--<script type="text/ng-template" id="blogEdit.html" href="pages/blogEdit.html"></script>-->
-    <!--<script type="text/ng-template" id="blogDelete.html" href="pages/blogDelete.html"></script>-->
+    <script type="text/ng-template" id="home.html">
+      <h1 class="mt-5">{{ vm.title }}</h1>
+      <p>Welcome to my blog site.
+         I am a student at Millersville University, and I am currently studying computer science.</br>
+         This website is a mock up blog site project for a class assignment.
+      </p>
+    </script>
+    
+    <script type="text/ng-template" id="blogList.html">
+      <h1 class="mt-5 mb-4">{{ vm.title }}</h1>
+      <div class="list ml-5 d-flex flex-column h-100 w-75 align-items-left">
+        <div ng-repeat="blog in vm.blogs">
+          <div class="blogListing border rounded w-100 p-4 mb-3 d-inline-flex-column">
+            <h4 class="blogHeading">
+              {{ blog.blogTitle }}
+              <span class="text-muted font-italic font-weight-light"> - {{ blog.createdOn | date:'fullDate' }}</span>
+            </h4>
+            <pre class="blogText m-3">{{ blog.blogText }}</pre>
+            <div class="options d-inline-flex">
+              <a class="nav-link px-8" href="#/blog/edit/{{ blog.id }}"> <i class="fa fa-edit fa-lg"></i></a>
+              <a class="nav-link px-8" href="#/blog/delete/{{ blog.id }}"> <i class="fa fa-trash fa-lg"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="blogAdd.html">
+      <h1 class="mt-5">{{ vm.title }}</h1>
+        <div class="container">
+          <div class="list ml-5 d-flex flex-column h-100 align-items-center">
+            <div class="blogListing border rounded p-4 mb-3 w-75 d-inline-flex-column">
+              <form name="blogForm" ng-submit="vm.submit()" ng-controller="AddController" class="d-flex flex-column align-items-center">
+                <input class="w-75 mb-4" type="text" name="blogTitle" placeholder="Blog title here">
+                <textarea class="w-75 mb-4" type="text" name="blogText" placeholder="Blog text here"></textarea>
+                <input class="w-25 border border-dark rounded bg-primary text-white" type="submit" value="Add">
+              </form>
+            <div class="mt-2 d-flex flex-column align-items-center">
+              <button class="w-25 border border-dark rounded">
+                <a ng-click="vm.cancel()" ng-controller="AddController" class="text-decoration-none text-dark d-block">Cancel</a>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="blogEdit.html" href="pages/blogEdit.html">
+      <h1 class="mt-5">{{ vm.title }}</h1>
+      <div class="container">
+        <div class="list ml-5 d-flex flex-column h-100 align-items-center">
+          <div class="blogListing border rounded p-4 mb-3 w-75 d-inline-flex-column">
+            <form name="blogForm" ng-submit="vm.submit()" ng-controller="EditController" class="d-flex flex-column align-items-center">
+              <input class="w-75 mb-4" type="text" name="blogTitle" value="{{ vm.blog.blogTitle }}">
+              <textarea class="w-75 mb-4" type="text" name="blogText">{{ vm.blog.blogText }}</textarea>
+              <input class="w-25 border border-dark rounded bg-primary text-white" type="submit" value="Edit">
+            </form>
+            <div class="mt-2 d-flex flex-column align-items-center">
+              <button class="w-25 border border-dark rounded">
+                <a ng-click="vm.cancel()" ng-controller="EditController" class="text-decoration-none text-dark d-block">Cancel</a>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="blogDelete.html" href="pages/blogDelete.html">
+      <h1 class="mt-5">{{ vm.title }}</h1>
+      <div class="container">
+        <div class="list ml-5 d-flex flex-column h-100 align-items-center">
+          <div class="blogListing border rounded p-4 mb-3 w-75 d-inline-flex-column">
+            <form name="blogForm" ng-submit="vm.submit()" ng-controller="DeleteController" class="d-flex flex-column align-items-center">
+              <input class="w-75 mb-4 border border-dark rounded" style="background-color:#e6e6e6" type="text" name="blogTitle" value="{{ vm.blog.blogTitle }}" readonly>
+              <textarea class="w-75 mb-4 border border-dark rounded" style="background-color:#e6e6e6" type="text" name="blogText" readonly>{{ vm.blog.blogText }}</textarea>
+              <input class="w-25 border border-dark rounded bg-primary text-white" type="submit" value="Delete">
+            </form>
+            <div class="mt-2 d-flex flex-column align-items-center">
+              <button class="w-25 border border-dark rounded">
+                <a ng-click="vm.cancel()" ng-controller="DeleteController" class="text-decoration-none text-dark d-block">Cancel</a>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+    
+    <div ng-view></div>
     
     <script src="/angular/bloggerApp.js"></script>
   </body>
