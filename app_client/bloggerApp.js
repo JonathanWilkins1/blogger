@@ -33,6 +33,18 @@ app.config(function ($routeProvider) {
       controllerAs: 'vm'
     })
 
+    .when('/register', {
+      templateUrl: "registerPage.html",
+      controller: 'RegisterController',
+      controllerAs: 'vm'
+    })
+
+    .when('/login', {
+      templateUrl: "loginPage.html",
+      controller: 'LoginController',
+      controllerAs: 'vm'
+    })
+
     .otherwise({ redirectTo: '/' });
 });
 
@@ -42,7 +54,7 @@ app.controller('HomeController', function HomeController() {
   vm.title = "Jonathan Wilkins\' Blog Site";
 });
 
-app.controller('ListController', function ListController($http) {
+app.controller('ListController', [ '$http', 'authentication', function ListController($http, authentication) {
   var vm = this;
   vm.title = "List Blogs";
   vm.blogs = {};
@@ -54,9 +66,12 @@ app.controller('ListController', function ListController($http) {
     .error(function(e) {
       console.log("Could not get the list of blogs");
     });
-});
+  vm.isLoggedIn = function() {
+    return authentication.isLoggedIn();
+  }
+}]);
 
-app.controller('AddController', [ '$http', '$state', '$routeParams', function AddController($http, $state, $routeParams) {
+app.controller('AddController', [ '$http', '$state', 'authentication', function AddController($http, $state, authentication) {
   var vm = this;
   vm.blog = {};
   vm.title = 'Add Blog';
@@ -65,7 +80,7 @@ app.controller('AddController', [ '$http', '$state', '$routeParams', function Ad
     vm.blog.blogTitle = blogForm.blogTitle.value;
     vm.blog.blogText = blogForm.blogText.value;
 
-    addBlog($http, vm.blog)
+    addBlog($http, authentication, vm.blog)
       .success(function() {
         console.log("Blog added successfully");
         $state.go('blogList');
@@ -79,7 +94,7 @@ app.controller('AddController', [ '$http', '$state', '$routeParams', function Ad
   }
 }]);
 
-app.controller('EditController', [ '$http', '$state', '$routeParams', function EditController($http, $state, $routeParams) {
+app.controller('EditController', [ '$http', '$state', '$routeParams', 'authentication', function EditController($http, $state, $routeParams, authentication) {
   var vm = this;
   vm.blog = {};
   vm.id = $routeParams.id;
@@ -98,7 +113,7 @@ app.controller('EditController', [ '$http', '$state', '$routeParams', function E
       vm.blog.blogTitle = blogForm.blogTitle.value;
       vm.blog.blogText = blogForm.blogText.value;
 
-      editBlogById($http, vm.id, vm.blog)
+      editBlogById($http, authentication, vm.id, vm.blog)
         .success(function() {
           console.log("Blog " + vm.id + " edited successfully");
           $state.go('blogList');
@@ -113,7 +128,7 @@ app.controller('EditController', [ '$http', '$state', '$routeParams', function E
   }
 }]);
 
-app.controller('DeleteController', [ '$http', '$state', '$routeParams', function DeleteController($http, $state, $routeParams) {
+app.controller('DeleteController', [ '$http', '$state', '$routeParams', 'authentication', function DeleteController($http, $state, $routeParams, authentication) {
   var vm = this;
   vm.blog = {};
   vm.id = $routeParams.id;
@@ -129,7 +144,7 @@ app.controller('DeleteController', [ '$http', '$state', '$routeParams', function
     });
 
   vm.submit = function() {
-    deleteBlogById($http, vm.id)
+    deleteBlogById($http, authentication, vm.id)
       .success(function() {
         console.log("Blog " + vm.id + " deleted successfully");
         $state.go('blogList');
@@ -153,16 +168,16 @@ function getBlogById($http, id) {
   return $http.get('/api/blogs/' + id);
 }
 
-function addBlog($http, data) {
-  return $http.post('/api/blogs/', data);
+function addBlog($http, authentication, data) {
+  return $http.post('/api/blogs/', data, { headers: { Authorization: 'Bearer '+ authentication.getToken() }});
 }
 
-function editBlogById($http, id, data) {
-  return $http.put('/api/blogs/' + id, data);
+function editBlogById($http, authentication, id, data) {
+  return $http.put('/api/blogs/' + id, data, { headers: { Authorization: 'Bearer '+ authentication.getToken() }});
 }
 
-function deleteBlogById($http, id) {
-  return $http.delete('/api/blogs/' + id);
+function deleteBlogById($http, authentication, id) {
+  return $http.delete('/api/blogs/' + id, { headers: { Authorization: 'Bearer '+ authentication.getToken() }});
 }
 
 //*** State provider ***

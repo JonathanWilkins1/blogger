@@ -1,17 +1,20 @@
 var createError = require('http-errors');
+require('dotenv').config();
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var passport = require('passport');
 var logger = require('morgan');
 require('./app_api/models/db');
+require('./app_api/models/users');
+require('./app_api/config/passport');
 
-//var indexRouter = require('./app_server/routes/index');
 var routesApi = require('./app_api/routes/index');
 
 var app = express();
 
 // view engine setup
-// app.set('views', path.join(__dirname, 'app_server/views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
@@ -20,8 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'app_client')));
-
-//app.use('/', indexRouter);
+app.use(passport.initialize());
 app.use('/api', routesApi);
 
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
@@ -30,6 +32,8 @@ app.use('/angular', express.static(path.join(__dirname, 'node_modules/angular'))
 app.use('/angular', express.static(path.join(__dirname, 'node_modules/angular-route')));
 app.use('/angular', express.static(path.join(__dirname, 'node_modules/angular-ui-router/release')));
 app.use('/angular', express.static(path.join(__dirname, 'app_client')));
+app.use('/auth', express.static(path.join(__dirname, 'app_client/common/auth')));
+app.use('/nav', express.static(path.join(__dirname, 'app_client/common/nav')));
 
 app.use(function(req, res) {
   res.sendFile(path.join(__dirname, 'app_client', 'index.html'));
@@ -48,7 +52,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('pages/error');
+  res.render('error');
 });
 
 module.exports = app;

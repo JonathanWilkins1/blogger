@@ -10,16 +10,10 @@
     <title>Jonathan Wilkins' Blog</title>
   </head>
   <body>
-    <!-- Navbar -->
-    <nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-primary">
-      <a class="navbar-brand" href="#/">My Blog</a>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-item nav-link active" href="#/blog">List Blogs</a>
-          <a class="nav-item nav-link active" href="#/blog/add">Add Blog</a>
-        </div>
-      </div>
-    </nav>
+    <!-- Navigation Bar -->
+    <div ng-controller="NavigationController">
+      <navigation></navigation>
+    </div>
 
     <!-- Angular Templates -->
     <script type="text/ng-template" id="home.html">
@@ -41,8 +35,8 @@
             </h4>
             <pre class="blogText m-3">{{ blog.blogText }}</pre>
             <div class="options d-inline-flex">
-              <a class="nav-link px-8" href="#/blog/edit/{{ blog.id }}"> <i class="fa fa-edit fa-lg"></i></a>
-              <a class="nav-link px-8" href="#/blog/delete/{{ blog.id }}"> <i class="fa fa-trash fa-lg"></i></a>
+              <a ng-show="vm.isLoggedIn()" class="nav-link px-8" href="#/blog/edit/{{ blog.id }}"> <i class="fa fa-edit fa-lg"></i></a>
+              <a ng-show="vm.isLoggedIn()" class="nav-link px-8" href="#/blog/delete/{{ blog.id }}"> <i class="fa fa-trash fa-lg"></i></a>
             </div>
           </div>
         </div>
@@ -76,7 +70,7 @@
           <div class="blogListing border rounded p-4 mb-3 w-75 d-inline-flex-column">
             <form name="blogForm" ng-submit="vm.submit()" ng-controller="EditController" class="d-flex flex-column align-items-center">
               <input class="w-75 mb-4" type="text" name="blogTitle" value="{{ vm.blog.blogTitle }}">
-              <textarea class="w-75 mb-4" type="text" name="blogText">{{ vm.blog.blogText }}</textarea>
+              <textarea class="h-25 w-75 mb-4" type="text" name="blogText">{{ vm.blog.blogText }}</textarea>
               <input class="w-25 border border-dark rounded bg-primary text-white" type="submit" value="Edit">
             </form>
             <div class="mt-2 d-flex flex-column align-items-center">
@@ -89,7 +83,7 @@
       </div>
     </script>
 
-    <script type="text/ng-template" id="blogDelete.html" href="pages/blogDelete.html">
+    <script type="text/ng-template" id="blogDelete.html"">
       <h1 class="mt-5">{{ vm.title }}</h1>
       <div class="container">
         <div class="list ml-5 d-flex flex-column h-100 align-items-center">
@@ -108,9 +102,51 @@
         </div>
       </div>
     </script>
+
+    <script type="text/ng-template" id="registerPage.html">
+      <h1 class="mt-5">{{ vm.pageHeader.title }}</h1>
+      <div class="container">
+        <div class="list ml-5 d-flex flex-column h-100 align-items-center">
+          <div class="blogListing border rounded p-4 mb-3 w-75 d-inline-flex-column">
+            <p>Already registered? Click <a href="/#login?page={{ vm.returnPage }}">here</a> to login!</p>
+            <form name="blogForm" ng-submit="vm.onSubmit()" ng-controller="RegisterController" class="d-flex flex-column align-items-center">
+              <div role="alert" ng-show="vm.formError" class="alert alert-danger">{{ vm.formError }}</div>
+              <label>Name</label>
+              <input class="mb-4" type="text" ng-model="vm.credentials.name" placeholder="Blog User">
+              <label>Email Address</label>
+              <input class="mb-4" type="text" ng-model="vm.credentials.email" placeholder="bloguser@blogmail.com"></input>
+              <label>Password</label>
+              <input class="mb-4" type="password" ng-model="vm.credentials.password" placeholder="bloguser123"></input>
+              <input class="border border-dark rounded bg-primary text-white" type="submit" value="Register">
+            </form>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="loginPage.html">
+      <h1 class="mt-5">{{ vm.pageHeader.title }}</h1>
+      <div class="container">
+        <div class="list ml-5 d-flex flex-column h-100 align-items-center">
+          <div class="blogListing border rounded p-4 mb-3 w-75 d-inline-flex-column">
+            <p>Not registered? Click <a href="/#register?page={{ vm.returnPage }}">here</a> to register!</p>
+            <form name="blogForm" ng-submit="vm.onSubmit()" ng-controller="RegisterController" class="d-flex flex-column align-items-center">
+              <div role="alert" ng-show="vm.formError" class="alert alert-danger">{{ vm.formError }}</div>
+              <label>Email Address</label>
+              <input class="mb-4" type="text" ng-model="vm.credentials.email" placeholder="bloguser@blogmail.com"></input>
+              <label>Password</label>
+              <input class="mb-4" type="password" ng-model="vm.credentials.password" placeholder="bloguser123"></input>
+              <input class="border border-dark rounded bg-primary text-white" type="submit" value="Login">
+            </form>
+          </div>
+        </div>
+      </div>
+    </script>
     
     <div ng-view></div>
     
     <script src="/angular/bloggerApp.js"></script>
+    <script src="/auth/authentication.js"></script>
+    <script src="/nav/navigation.js"></script>
   </body>
 </html>
