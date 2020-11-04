@@ -69,6 +69,11 @@ app.controller('ListController', [ '$http', 'authentication', function ListContr
   vm.isLoggedIn = function() {
     return authentication.isLoggedIn();
   }
+  vm.isCurrentUser = function(userEmail) {
+    if(!vm.isLoggedIn())
+      return false;
+    return authentication.currentUser().email == userEmail;
+  }
 }]);
 
 app.controller('AddController', [ '$http', '$state', 'authentication', function AddController($http, $state, authentication) {
@@ -79,6 +84,8 @@ app.controller('AddController', [ '$http', '$state', 'authentication', function 
   vm.submit = function() {
     vm.blog.blogTitle = blogForm.blogTitle.value;
     vm.blog.blogText = blogForm.blogText.value;
+    vm.blog.email = authentication.currentUser().email;
+    vm.blog.name = authentication.currentUser().name;
 
     addBlog($http, authentication, vm.blog)
       .success(function() {
@@ -103,7 +110,7 @@ app.controller('EditController', [ '$http', '$state', '$routeParams', 'authentic
   getBlogById($http, vm.id)
     .success(function(data) {
       vm.blog = data;
-      console.log("Retrieved blog " + vm .id + " successfully");
+      console.log("Retrieved blog " + vm.id + " successfully");
     })
     .error(function(e) {
       console.log("Could not get blog " + vm.id);

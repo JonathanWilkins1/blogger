@@ -31,6 +31,8 @@ var buildBlogList = function (req, res, results) {
     blogs.push({
       blogTitle: obj.blogTitle,
       blogText: obj.blogText,
+      email: obj.email,
+      name: obj.name,
       createdOn: obj.createdOn,
       id: obj._id
     });
@@ -69,6 +71,8 @@ module.exports.add = function (req, res) {
     .create({
       blogTitle: req.body.blogTitle,
       blogText: req.body.blogText,
+      email: req.body.email,
+      name: req.body.name,
       createdOn: req.body.createdOn,
     }, function (err, blog) {
       if (err) {
@@ -86,7 +90,10 @@ module.exports.edit = function (req, res) {
   Blog
     .findOneAndUpdate(
       { _id: req.params.id },
-      { $set: { blogTitle: req.body.blogTitle, blogText: req.body.blogText } },
+      { $set: {
+        blogTitle: req.body.blogTitle,
+        blogText: req.body.blogText
+      } },
       function (err, response) {
         if (err) {
           sendJSONresponse(res, 400, err);

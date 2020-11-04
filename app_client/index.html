@@ -31,12 +31,12 @@
           <div class="blogListing border rounded w-100 p-4 mb-3 d-inline-flex-column">
             <h4 class="blogHeading">
               {{ blog.blogTitle }}
-              <span class="text-muted font-italic font-weight-light"> - {{ blog.createdOn | date:'fullDate' }}</span>
+              <span class="text-muted font-italic font-weight-light"> - Published by {{ blog.name }} on {{ blog.createdOn | date:'fullDate' }}</span>
             </h4>
             <pre class="blogText m-3">{{ blog.blogText }}</pre>
             <div class="options d-inline-flex">
-              <a ng-show="vm.isLoggedIn()" class="nav-link px-8" href="#/blog/edit/{{ blog.id }}"> <i class="fa fa-edit fa-lg"></i></a>
-              <a ng-show="vm.isLoggedIn()" class="nav-link px-8" href="#/blog/delete/{{ blog.id }}"> <i class="fa fa-trash fa-lg"></i></a>
+              <a ng-show="vm.isCurrentUser(blog.email)" class="nav-link px-8" href="#/blog/edit/{{ blog.id }}"> <i class="fa fa-edit fa-lg"></i></a>
+              <a ng-show="vm.isCurrentUser(blog.email)" class="nav-link px-8" href="#/blog/delete/{{ blog.id }}"> <i class="fa fa-trash fa-lg"></i></a>
             </div>
           </div>
         </div>
