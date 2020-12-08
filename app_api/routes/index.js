@@ -14,6 +14,7 @@ router.get('/blogs/:id', blogCtrl.getSingle);
 router.post('/blogs/', auth, blogCtrl.add);
 router.put('/blogs/:id', auth, blogCtrl.edit);
 router.delete('/blogs/:id', auth, blogCtrl.delete);
+router.put('/comments/:id', blogCtrl.comment);
 router.post('/register', authCtrl.register);
 router.post('/login', authCtrl.login);
 

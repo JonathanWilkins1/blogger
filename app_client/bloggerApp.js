@@ -33,6 +33,12 @@ app.config(function ($routeProvider) {
       controllerAs: 'vm'
     })
 
+    .when('/blog/comment/:id', {
+      templateUrl: "blogComment.html",
+      controller: 'CommentController',
+      controllerAs: 'vm'
+    })
+
     .when('/register', {
       templateUrl: "registerPage.html",
       controller: 'RegisterController',
@@ -54,7 +60,7 @@ app.controller('HomeController', function HomeController() {
   vm.title = "Jonathan Wilkins\' Blog Site";
 });
 
-app.controller('ListController', [ '$http', 'authentication', function ListController($http, authentication) {
+app.controller('ListController', [ '$http', 'authentication', '$scope', '$interval', function ListController($http, authentication, $scope, $interval) {
   var vm = this;
   vm.title = "List Blogs";
   vm.blogs = {};
@@ -74,6 +80,22 @@ app.controller('ListController', [ '$http', 'authentication', function ListContr
       return false;
     return authentication.currentUser().email == userEmail;
   }
+  $scope.callAtInterval = function() {
+    console.log("Interval occurred");
+    getAllBlogs($http)
+      .success(function(data) {
+        vm.blogs = data;
+      })
+      .error(function (e) {
+        console.log("Could not get list of blogs");
+      });
+    }
+  $interval(
+    function() {
+      $scope.callAtInterval();
+    },
+    3000, 0, true
+  );
 }]);
 
 app.controller('AddController', [ '$http', '$state', 'authentication', function AddController($http, $state, authentication) {
@@ -166,6 +188,56 @@ app.controller('DeleteController', [ '$http', '$state', '$routeParams', 'authent
   }
 }]);
 
+app.controller('CommentController', [ '$http', '$state', '$routeParams', 'authentication', '$scope', '$interval',
+	function CommentController($http, $state, $routeParams, authentication, $scope, $interval) {
+  var vm = this;
+  vm.blog = {};
+  vm.id = $routeParams.id;
+  vm.title = "Comment on this blog";
+  vm.comment = {};
+
+  getBlogById($http, vm.id)
+    .success(function(data) {
+      vm.blog = data;
+      console.log("Retrieved blog " + vm .id + " successfully");
+    })
+    .error(function(e) {
+      console.log("Could not get blog " + vm.id);
+    });
+
+  vm.submit = function() {
+    vm.comment.text = commentForm.commentText.value;
+    vm.comment.email = authentication.currentUser().email;
+    vm.comment.name = authentication.currentUser().name;
+
+    commentBlogById($http, vm.id, vm.comment)
+      .success(function() {
+        console.log("Blog " + vm.id + " commented on successfully");
+        $state.go('blogList');
+      })
+      .error(function(e) {
+        console.log("Could not comment on blog " + vm.id);
+      });
+  }
+
+  $scope.callAtInterval = function() {
+    console.log("Interval occurred");
+    getBlogById($http, vm.id)
+      .success(function(data) {
+        vm.blogs = data;
+      })
+      .error(function (e) {
+        console.log("Could not get list of comments");
+      });
+    }
+  $interval(
+    function() {
+      $scope.callAtInterval();
+    },
+    3000, 0, true
+  );
+}]);
+
 /* REST Web API Functions */
 function getAllBlogs($http) {
   return $http.get('/api/blogs/');
@@ -184,7 +256,12 @@ function editBlogById($http, authentication, id, data) {
 }
 
 function deleteBlogById($http, authentication, id) {
+  console.log(authentication);
   return $http.delete('/api/blogs/' + id, { headers: { Authorization: 'Bearer '+ authentication.getToken() }});
+}
+
+function commentBlogById($http, id, data) {
+  return $http.put('/api/comments/' + id, data);
 }
 
 //*** State provider ***

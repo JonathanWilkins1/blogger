@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var logger = require('morgan');
 require('./app_api/models/db');
-require('./app_api/models/users');
 require('./app_api/config/passport');
 
 var routesApi = require('./app_api/routes/index');

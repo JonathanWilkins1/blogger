@@ -117,3 +117,25 @@ module.exports.delete = function (req, res) {
       }
     );
 };
+
+module.exports.comment = function (req, res) {
+  var comment = {
+      text: req.body.text,
+      email: req.body.email,
+      name: req.body.name,
+  }
+  Blog
+    .findOneAndUpdate(
+      { _id: req.params.id },
+      { $push: {
+        comments: comment
+      } },
+      function (err, response) {
+        if (err) {
+          sendJSONresponse(res, 400, err);
+        } else {
+          sendJSONresponse(res, 201, response);
+        }
+      }
+    );
+};

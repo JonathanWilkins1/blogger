@@ -37,6 +37,7 @@
             <div class="options d-inline-flex">
               <a ng-show="vm.isCurrentUser(blog.email)" class="nav-link px-8" href="#/blog/edit/{{ blog.id }}"> <i class="fa fa-edit fa-lg"></i></a>
               <a ng-show="vm.isCurrentUser(blog.email)" class="nav-link px-8" href="#/blog/delete/{{ blog.id }}"> <i class="fa fa-trash fa-lg"></i></a>
+              <a ng-show="vm.isLoggedIn()" class="nav-link px-8" href="#/blog/comment/{{ blog.id }}"> <i class="fa fa-comment fa-lg"></i></a>
             </div>
           </div>
         </div>
@@ -98,6 +99,31 @@
                 <a ng-click="vm.cancel()" ng-controller="DeleteController" class="text-decoration-none text-dark d-block">Cancel</a>
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="blogComment.html">
+      <h1 class="mt-5 mb-4">{{ vm.title }}</h1>
+      <div class="list ml-5 d-flex flex-column h-100 w-75 align-items-left">
+        <div class="blogListing border rounded w-100 p-4 mb-3 d-inline-flex-column">
+          <h4 class="blogHeading">
+            {{ vm.blog.blogTitle }}
+            <span class="text-muted font-italic font-weight-light"> - Published by {{ vm.blog.name }} on {{ vm.blog.createdOn | date:'fullDate' }}</span>
+          </h4>
+          <pre class="blogText m-3">{{ vm.blog.blogText }}</pre>
+        </div>
+        <div class="commentListing border rounded w-50 p-8 m-3 d-inline-flex-column">
+          <form name="commentForm" ng-submit="vm.submit()" ng-controller="CommentController" class="d-flex flex-column align-items-left">
+            <input class="m-3 mb-0 border border-dark rounded" type="text" name="commentText" placeholder="Leave a comment...">
+            <input class="w-25 m-3 mt-1 border border-dark rounded bg-primary text-white" type="submit" value="Comment">
+          </form>
+        </div>
+        <div ng-repeat="comment in vm.blog.comments">
+          <div class="blogComment border rounded w-50 p-8 mb-3 d-inline-flex-column">
+            <pre class="commentText m-3 mb-0">{{ comment.text }}</pre>
+            <p class="m-3">Posted by {{ comment.name }} on {{ comment.createdOn | date:'fullDate' }}</p>          
           </div>
         </div>
       </div>
